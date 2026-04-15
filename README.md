@@ -76,6 +76,26 @@ bash deploy.sh
 
 This script builds the image locally and runs the container as `ai-arcade-snake-service` on port `8099`.
 
+## Docker Compose support
+
+A `docker-compose.yml` file is included for local development and easy service startup.
+
+To run with Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+Then open `http://localhost:8099`.
+
+To stop the service:
+
+```bash
+docker compose down
+```
+
+Docker Compose is a local helper only; the GitHub Actions workflow still handles the remote auto-deploy flow.
+
 ## Notes
 
 - The workflow uses `appleboy/ssh-action` to run deployment commands remotely.

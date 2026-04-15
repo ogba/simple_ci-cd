@@ -58,16 +58,10 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run container and verify service
-        uses: addnab/docker-run-action@v4
-        with:
-          image: ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest
-          options: -d -p 8099:8099 --name ai-arcade-snake-test
-          run: |
-            sleep 3
-            curl --fail http://localhost:8099
-
-      - name: Stop test container
         run: |
+          docker run -d --name ai-arcade-snake-test -p 8099:8099 ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest
+          sleep 5
+          curl --fail http://localhost:8099
           docker stop ai-arcade-snake-test
           docker rm ai-arcade-snake-test
 
