@@ -73,6 +73,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v3
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Verify Tailscale connectivity
+        run: |
+          echo "=== Tailscale status ==="
+          tailscale status
+          echo "=== Pinging DEPLOY_HOST ==="
+          ping -c 3 ${{ secrets.DEPLOY_HOST }} || echo "Ping failed"
+          echo "=== TCP check on SSH port ==="
+          nc -zv -w 5 ${{ secrets.DEPLOY_HOST }} ${{ secrets.DEPLOY_PORT }} || echo "TCP connect failed"
+
       - name: Deploy to target host
         uses: appleboy/ssh-action@v1.2.0
         with:
